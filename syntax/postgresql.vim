@@ -10,11 +10,12 @@ syn keyword postgresqlKeyword btree REFERENCES
 syn keyword postgresqlKeyword BEGIN ROLLBACK COMMIT
 syn keyword postgresqlKeyword DROP CREATE INDEX VIEW TABLE
 syn match   postgresqlKeyword "not null"
+syn keyword postgresqlKeyword table sequence view
 
 " DML (roughly)
-syn keyword postgresqlHeading Table
-syn keyword postgresqlHeading Column Type Modifiers
+syn keyword postgresqlHeading Column Type Modifiers Schema Name Owner
 syn match   postgresqlHeading "Indexes:"
+syn match   postgresqlHeading "List of relations"
 syn match   postgresqlHeading "Foreign-key constraints:"
 syn match   postgresqlHeading "Triggers:"
 syn match   postgresqlTabular "^[-+]\+$"
@@ -23,6 +24,7 @@ syn match   postgresqlTabular " | "
 " EXPLAIN
 syn match   postgresqlHeading "QUERY PLAN"
 syn match   postgresqlHeading "Seq Scan"
+syn match   postgresqlHeading "\v(Hash)?Aggregate"
 syn match   postgresqlHeading "Hash \v(Join|Cond)?"
 syn match   postgresqlKeyword "cost=\@="
 syn match   postgresqlKeyword "rows=\@="
