@@ -7,11 +7,14 @@ syn match   postgresqlType   "::\w\+"
 
 " DDL
 syn match   postgresqlKeyword "FOREIGN KEY"
+syn match   postgresqlKeyword "PRIMARY KEY"
 syn keyword postgresqlKeyword BEFORE AFTER INSERT OR UPDATE ON FOR EACH ROW EXECUTE PROCEDURE
+syn keyword postgresqlKeyword CONSTRAINT
 syn keyword postgresqlKeyword btree REFERENCES
 syn keyword postgresqlKeyword BEGIN ROLLBACK COMMIT
 syn keyword postgresqlKeyword DROP CREATE INDEX VIEW TABLE
 syn match   postgresqlKeyword "not null"
+syn match   postgresqlKeyword "default"
 syn keyword postgresqlKeyword table sequence view
 
 " DML (roughly)
@@ -22,6 +25,7 @@ syn keyword postgresqlHeading View
 syn keyword postgresqlHeading Column Type Modifiers Schema Name Owner Value Definition
 syn match   postgresqlHeading "Foreign-key constraints:"
 syn match   postgresqlHeading "Indexes:"
+syn match   postgresqlHeading "Referenced by:"
 syn match   postgresqlHeading "List of relations"
 syn match   postgresqlHeading "Triggers:"
 syn match   postgresqlTabular " | "
