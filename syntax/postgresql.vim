@@ -1,71 +1,95 @@
-" Primitives
-syn region  postgresqlString start="\"" end="\"" skip="\v\\."
-syn region  postgresqlString start="\'" end="\'" skip="\v\\."
-syn match   postgresqlNumber "-\?\d\+\(\.\d*\)\?"
-syn match	postgresqlBraces '[{}()\[\]]'
-syn match   postgresqlType   "::\w\+"
+"" Primitives
+syn region  String start="\"" end="\"" skip="\v\\."
+syn match   Number "-\?\d\+\(\.\d*\)\?"
+syn match	SpecialChar '[{}()\[\]]'
+syn match   Type   "::\w\+"
 
-" DDL
-syn match   postgresqlKeyword "FOREIGN KEY"
-syn match   postgresqlKeyword "PRIMARY KEY"
-syn keyword postgresqlKeyword BEFORE AFTER INSERT OR UPDATE ON FOR EACH ROW EXECUTE PROCEDURE
-syn keyword postgresqlKeyword CONSTRAINT
-syn keyword postgresqlKeyword btree REFERENCES
-syn keyword postgresqlKeyword BEGIN ROLLBACK COMMIT
-syn keyword postgresqlKeyword DROP CREATE INDEX VIEW TABLE
-syn match   postgresqlKeyword "not null"
-syn match   postgresqlKeyword "default"
-syn keyword postgresqlKeyword table sequence view
+"" DDL
+syn keyword Keyword BEFORE AFTER INSERT OR UPDATE ON FOR EACH ROW EXECUTE PROCEDURE
+syn keyword Keyword BEGIN ROLLBACK COMMIT
+syn keyword Keyword CONSTRAINT
+syn keyword Keyword DROP CREATE INDEX VIEW TABLE
+syn keyword Keyword btree REFERENCES
+syn keyword Keyword default
+syn keyword Keyword table sequence view
+syn match   Keyword "FOREIGN KEY"
+syn match   Keyword "PRIMARY KEY"
+syn match   Keyword "not null"
 
-" DML (roughly)
-syn keyword postgresqlHeading Sequence
-syn keyword postgresqlHeading Table
-syn keyword postgresqlHeading Index
-syn keyword postgresqlHeading View
-syn keyword postgresqlHeading Column Type Modifiers Schema Name Owner Value Definition
-syn match   postgresqlHeading "Foreign-key constraints:"
-syn match   postgresqlHeading "Indexes:"
-syn match   postgresqlHeading "Referenced by:"
-syn match   postgresqlHeading "List of relations"
-syn match   postgresqlHeading "Triggers:"
-syn match   postgresqlTabular " | "
-syn match   postgresqlTabular "^[-+]\+$"
+syn match   Delimiter " | "
+syn match   Delimiter "^[-+]\+$"
 
-" EXPLAIN
-syn match   postgresqlHeading "QUERY PLAN"
+syn keyword Identifier Column Type Modifiers Schema Name Owner Value Definition
+syn keyword Identifier Index
+syn keyword Identifier Sequence
+syn keyword Identifier Table
+syn keyword Identifier VACUUM
+syn keyword Identifier View
+syn keyword Identifier text integer
+syn match   Identifier "Foreign-key constraints:"
+syn match   Identifier "Indexes:"
+syn match   Identifier "List of relations"
+syn match   Identifier "Referenced by:"
+syn match   Identifier "Triggers:"
+syn match   Identifier "\vtimestamp( without time zone)?"
 
-syn match   postgresqlPlanner "Seq Scan"
-syn match   postgresqlPlanner "\v(Hash)?Aggregate"
-syn match   postgresqlPlanner "Hash \v(Join|Cond)?"
-syn match   postgresqlPlanner "Filter"
+"" DML (roughly)
+syn match   SpecialComment "?column?"
 
-syn match   postgresqlKeyword "cost=\@="
-syn match   postgresqlKeyword "rows=\@="
-syn match   postgresqlKeyword "width=\@="
-syn match   postgresqlKeyword "loops=\@="
-syn match   postgresqlKeyword "actual time=\@="
-syn match   postgresqlResult  "Buckets:"
-syn match   postgresqlResult  "Batches:"
-syn match   postgresqlResult  "Memory Usage:"
-syn match   postgresqlHeading "Output"
-syn match   postgresqlKeyword "->"
-syn match   postgresqlResult "Total runtime: .* ms" contains=postgresqlNumber
+"" EXPLAIN
+syn region  Optimizer start="QUERY PLAN" end="^$" keepend contains=OptimizerStep,OptimizerStats
 
-" Postgres chatter.
-syn match   postgresqlResult "^(.* rows)$" contains=postgresqlNumber
-syn match   postgresqlResult "^Timing is on."
-syn match   postgresqlResult "^Time: .* ms" contains=postgresqlNumber
-syn match   postgresqlError  "^ERROR:\@="
-syn match   postgresqlResult "^LINE \d\+:" contains=postgresqlNumber
-syn match   postgresqlError  "\v(^\s+)@<=\^$"
+syn keyword OptimizerStep Materialize contained
+syn match   OptimizerStep "Filter:" contained
+syn match   OptimizerStep "Nested Loop" contained
+syn match   OptimizerStep "Seq Scan on" contained
+syn match   OptimizerStep "Sort Key: \w\+\.\w\+$" contained contains=OptimizerStepItem
+syn match   OptimizerStepItem "\w\+\.\w\+$" contained
+syn match	OptimizerStats "(cost=\d\+\.\d\+\.\.\d\+\.\d\+ rows=\d\+ width=\d\+)" contained contains=Number
 
-hi link postgresqlResult  Comment
-hi link postgresqlTabular Delimiter
-hi link postgresqlError   Error
-hi link postgresqlHeading Identifier
-hi link postgresqlPlanner Identifier
-hi link postgresqlType    Identifier
-hi link postgresqlBraces  Identifier
-hi link postgresqlKeyword Keyword
-hi link postgresqlNumber  Number
-hi link postgresqlString  String
+"syn keyword postgresqlExplain Filter contained
+"syn keyword postgresqlExplain Join contained
+"syn keyword postgresqlExplain Limit contained
+"syn keyword postgresqlExplain Materialize contained
+"syn match   postgresqlExplain "Hash \v(Join|Cond)?" contained
+"syn match   postgresqlExplain "Nested Loop"
+"syn match   postgresqlExplain "Seq Scan on" contained
+"syn match   postgresqlExplain "\v(Hash)?Aggregate" contained
+"syn match   postgresqlExplain "\vSort (Key)?" contained
+"syn match   postgresqlExplainHeading "QUERY PLAN" contained
+"
+"syn match   Keyword "cost=\@=" contained
+"syn match   Keyword "rows=\@=" contained
+"syn match   Keyword "width=\@=" contained
+"syn match   Keyword "loops=\@=" contained
+"syn match   Keyword "actual time=\@=" contained
+"syn match   postgresqlResult  "Buckets:" contained
+"syn match   postgresqlResult  "Batches:" contained
+"syn match   postgresqlResult  "Memory Usage:" contained
+"syn match   Identifier "Output" contained
+"syn match   Keyword "->" contained
+"syn match   postgresqlResult "Total runtime: .* ms" contained contains=postgresqlNumber
+"
+"" Postgres chatter.
+"syn match   Comment "^(.* rows)$" contains=postgresqlNumber
+syn match   Comment "^Timing is on."
+"syn match   Comment "^Time: .* ms" contains=postgresqlNumber
+syn match   Error  "^ERROR:\@="
+syn match   Error  "\v^\s+\zs\^$"
+syn match   Error "^LINE\ze \d\+:" contains=Number
+"
+"hi link postgresqlResult  Comment
+"hi link postgresqlRowCount  Comment
+"hi link postgresqlTabular Delimiter
+"hi link postgresqlError   Error
+"hi link postgresqlExplainHeading Identifier
+"hi link postgresqlExplain Identifier
+"hi link postgresqlType    Identifier
+"hi link postgresqlBraces  Identifier
+"hi link Keyword Keyword
+"hi link postgresqlNumber  Number
+"hi link postgresqlString  String
+"
+hi link OptimizerStep Keyword
+hi link OptimizerStepItem Identifier
+hi link OptimizerStats Comment
