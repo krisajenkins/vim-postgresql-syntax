@@ -4,6 +4,7 @@ syn region  postgresqlString start="\'" end="\'" skip="\v\\."
 syn match   postgresqlNumber "-\?\d\+\(\.\d*\)\?"
 syn match	postgresqlBraces '[{}()\[\]]'
 syn match   postgresqlType   "::\w\+"
+syn match   postgresqlUUID "\v[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
 
 " DDL
 syn match   postgresqlKeyword "FOREIGN KEY"
@@ -69,3 +70,4 @@ hi link postgresqlBraces  Identifier
 hi link postgresqlKeyword Keyword
 hi link postgresqlNumber  Number
 hi link postgresqlString  String
+hi link postgresqlUUID  Number
